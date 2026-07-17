@@ -98,54 +98,54 @@
             <!-- Header -->
             <div class="flex justify-between items-start">
               <div class="flex items-center gap-3">
-                <!-- 头像区域 (为了能塞下图片，去掉了内联文字 span，由 JS 控制) -->
-                <div id="ticketLogoBg" class="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm tracking-wider bg-[#004a99] overflow-hidden">
+                <!-- 头像区域 -->
+                <div id="ticketLogoBg" class="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm bg-[#004a99] overflow-hidden">
                 </div>
                 <div>
                   <div class="flex items-center gap-3">
-                    <h1 id="ticketCityName" class="text-3xl font-black tracking-widest text-gray-800 whitespace-nowrap">北京地铁</h1>
+                    <h1 id="ticketCityName" class="text-3xl font-black text-gray-800 whitespace-nowrap">北京地铁</h1>
                     <!-- 线路名称修改为更美观的横向标签 -->
-                    <span id="ticketLine" class="text-sm font-bold px-2.5 py-1 rounded-md text-white shadow-sm bg-[#004a99] tracking-wider whitespace-nowrap">1号线</span>
+                    <span id="ticketLine" class="text-sm font-bold px-2.5 py-1 rounded-md text-white shadow-sm bg-[#004a99] whitespace-nowrap">1号线</span>
                   </div>
-                  <p class="text-sm text-gray-500 font-mono mt-1 tracking-wider uppercase">METRO BOARDING PASS</p>
+                  <p class="text-sm text-gray-500 font-mono mt-1 uppercase">METRO BOARDING PASS</p>
                 </div>
               </div>
               <div class="text-right pt-1">
-                <div class="text-sm font-bold text-gray-400 tracking-widest uppercase">单程票 / Single Journey</div>
+                <div class="text-sm font-bold text-gray-400 uppercase">单程票 / Single Journey</div>
               </div>
             </div>
 
             <!-- 旅程信息 -->
             <div class="flex justify-between items-end my-4">
-              <div class="flex flex-col flex-1">
-                <span class="text-xs text-gray-400 uppercase tracking-widest mb-1">起点 Origin</span>
-                <span id="ticketStartStation" class="text-4xl font-black text-gray-800 tracking-tight truncate pr-4">笑笑橙</span>
+              <div class="flex flex-col flex-1 overflow-hidden">
+                <span class="text-xs text-gray-400 uppercase mb-1">起点 Origin</span>
+                <span id="ticketStartStation" class="text-4xl font-black text-gray-800 whitespace-nowrap overflow-hidden pr-4">笑笑橙</span>
               </div>
 
               <!-- 装饰线路指示器 (调整为更紧凑的间距) -->
               <div class="flex flex-col items-center justify-center w-36 mx-4 relative pb-3 shrink-0">
                 <div class="w-full border-t-2 border-dashed border-gray-300 relative flex items-center justify-center">
                   <div id="ticketDotLeft" class="absolute -left-1.5 w-3.5 h-3.5 rounded-full border-[3px] border-white shadow-sm bg-[#004a99]"></div>
-                  <!-- 缩小了图标尺寸和留白，使整体间距变紧凑 -->
-                  <i data-lucide="train-front" class="text-gray-400 bg-white px-2 absolute" style="width: 56px; height: 38px;"></i>
+                  <!-- 替换为图片编码直接渲染，解决下载时图标丢失的问题 -->
+                  <img src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 3.1V7a4 4 0 0 0 8 0V3.1'/%3E%3Cpath d='m9 15-1-1'/%3E%3Cpath d='m15 15 1-1'/%3E%3Cpath d='M9 19c-2.8 0-5-2.2-5-5v-4a8 8 0 0 1 16 0v4c0 2.8-2.2 5-5 5Z'/%3E%3Cpath d='m8 19-2 3'/%3E%3Cpath d='m16 19 2 3'/%3E%3Cpath d='M2 22h20'/%3E%3C/svg%3E" class="bg-white px-2 absolute" style="width: 56px; height: 38px;" alt="train" />
                   <div id="ticketDotRight" class="absolute -right-1.5 w-3.5 h-3.5 rounded-full border-[3px] border-white shadow-sm bg-[#004a99]"></div>
                 </div>
               </div>
 
-              <div class="flex flex-col flex-1 text-right">
-                <span class="text-xs text-gray-400 uppercase tracking-widest mb-1">终点 Destination</span>
-                <span id="ticketEndStation" class="text-4xl font-black text-gray-800 tracking-tight truncate pl-4">Do都城</span>
+              <div class="flex flex-col flex-1 text-right overflow-hidden">
+                <span class="text-xs text-gray-400 uppercase mb-1">终点 Destination</span>
+                <span id="ticketEndStation" class="text-4xl font-black text-gray-800 whitespace-nowrap overflow-hidden pl-4">Do都城</span>
               </div>
             </div>
 
             <!-- 底部 Meta Data -->
             <div class="flex justify-between items-center bg-gray-50 rounded-xl p-5 border border-gray-100">
               <div class="flex flex-col gap-1">
-                <span class="text-[11px] text-gray-400 uppercase font-bold tracking-wider">乘车时间 Date</span>
+                <span class="text-[11px] text-gray-400 uppercase font-bold">乘车时间 Date</span>
                 <span id="ticketDate" class="font-mono text-gray-700 font-medium text-lg"></span>
               </div>
               <div class="flex flex-col gap-1 text-right">
-                <span class="text-[11px] text-gray-400 uppercase font-bold tracking-wider">票价 Price</span>
+                <span class="text-[11px] text-gray-400 uppercase font-bold">票价 Price</span>
                 <span id="ticketPrice" class="font-mono text-3xl font-black text-[#004a99]">¥5.00</span>
               </div>
             </div>
@@ -157,11 +157,11 @@
             <div class="absolute -top-4 -left-4 w-8 h-8 bg-gray-100 rounded-full print:bg-white"></div>
             <div class="absolute -bottom-4 -left-4 w-8 h-8 bg-gray-100 rounded-full print:bg-white"></div>
 
-            <span class="text-[11px] text-gray-400 tracking-widest text-center mb-6 font-bold uppercase">
+            <span class="text-[11px] text-gray-400 text-center mb-6 font-bold uppercase">
               扫码过闸<br>Scan to Enter
             </span>
             <div id="qrcodeContainer"></div>
-            <span id="ticketNo" class="text-[9px] text-gray-400 font-mono mt-6 text-center break-all tracking-wider"></span>
+            <span id="ticketNo" class="text-[9px] text-gray-400 font-mono mt-6 text-center break-all"></span>
           </div>
         </div>
 
