@@ -124,12 +124,18 @@
                 <div id="ticketStartStation" class="text-4xl font-black text-gray-800 leading-relaxed pb-1 whitespace-nowrap">笑笑橙</div>
               </div>
 
-              <!-- 装饰线路指示器 (调整为更紧凑的间距) -->
+              <!-- 装饰线路指示器 (修复截图丢失车头问题) -->
               <div class="flex flex-col items-center justify-center w-32 mx-2 relative pb-4 shrink-0">
-                <div class="w-full border-t-2 border-dashed border-gray-300 relative flex items-center justify-center">
-                  <div id="ticketDotLeft" class="absolute -left-1.5 w-3.5 h-3.5 rounded-full border-[3px] border-white shadow-sm bg-[#004a99]"></div>
-                  <!-- 修改点3: 将容易丢失的 img 标签替换为原生的 svg 标签，截图工具能100%识别 -->
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="bg-white px-2 absolute" style="width: 56px; height: 38px;">
+                <!-- 给容器固定高度 (h-10)，防止 html2canvas 截断内容 -->
+                <div class="w-full relative flex items-center justify-center h-10">
+                  <!-- 虚线改为绝对定位，居中穿过 -->
+                  <div class="absolute left-0 right-0 top-1/2 border-t-2 border-dashed border-gray-300 -mt-[1px]"></div>
+                  
+                  <!-- 左侧原点 -->
+                  <div id="ticketDotLeft" class="absolute left-0 top-1/2 w-3.5 h-3.5 rounded-full border-[3px] border-white shadow-sm bg-[#004a99] z-10 -ml-1.5 -mt-[7px]"></div>
+                  
+                  <!-- 车头图标 (去掉 absolute，让它直接在 flex 容器中自然居中显示，并显式指定宽高) -->
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="bg-white px-2 relative z-10" width="56" height="38">
                     <path d="M8 3.1V7a4 4 0 0 0 8 0V3.1"/>
                     <path d="m9 15-1-1"/>
                     <path d="m15 15 1-1"/>
@@ -138,7 +144,9 @@
                     <path d="m16 19 2 3"/>
                     <path d="M2 22h20"/>
                   </svg>
-                  <div id="ticketDotRight" class="absolute -right-1.5 w-3.5 h-3.5 rounded-full border-[3px] border-white shadow-sm bg-[#004a99]"></div>
+                  
+                  <!-- 右侧原点 -->
+                  <div id="ticketDotRight" class="absolute right-0 top-1/2 w-3.5 h-3.5 rounded-full border-[3px] border-white shadow-sm bg-[#004a99] z-10 -mr-1.5 -mt-[7px]"></div>
                 </div>
               </div>
 
