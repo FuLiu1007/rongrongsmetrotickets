@@ -117,24 +117,36 @@
 
             <!-- 旅程信息 -->
             <div class="flex justify-between items-end my-4">
-              <div class="flex flex-col flex-1 min-w-0 pr-2">
+              <!-- 修改点1: 移除了导致截断的 min-w-0 -->
+              <div class="flex flex-col flex-1 pr-2">
                 <span class="text-xs text-gray-400 uppercase mb-1">起点 Origin</span>
-                <div id="ticketStartStation" class="text-4xl font-black text-gray-800 truncate leading-relaxed pb-1">笑笑橙</div>
+                <!-- 修改点2: 移除了 truncate，换成了 whitespace-nowrap 保证文字完整且不换行 -->
+                <div id="ticketStartStation" class="text-4xl font-black text-gray-800 leading-relaxed pb-1 whitespace-nowrap">笑笑橙</div>
               </div>
 
               <!-- 装饰线路指示器 (调整为更紧凑的间距) -->
               <div class="flex flex-col items-center justify-center w-32 mx-2 relative pb-4 shrink-0">
                 <div class="w-full border-t-2 border-dashed border-gray-300 relative flex items-center justify-center">
                   <div id="ticketDotLeft" class="absolute -left-1.5 w-3.5 h-3.5 rounded-full border-[3px] border-white shadow-sm bg-[#004a99]"></div>
-                  <!-- 替换为图片编码直接渲染，解决下载时图标丢失的问题 -->
-                  <img src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 3.1V7a4 4 0 0 0 8 0V3.1'/%3E%3Cpath d='m9 15-1-1'/%3E%3Cpath d='m15 15 1-1'/%3E%3Cpath d='M9 19c-2.8 0-5-2.2-5-5v-4a8 8 0 0 1 16 0v4c0 2.8-2.2 5-5 5Z'/%3E%3Cpath d='m8 19-2 3'/%3E%3Cpath d='m16 19 2 3'/%3E%3Cpath d='M2 22h20'/%3E%3C/svg%3E" class="bg-white px-2 absolute" style="width: 56px; height: 38px;" alt="train" />
+                  <!-- 修改点3: 将容易丢失的 img 标签替换为原生的 svg 标签，截图工具能100%识别 -->
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="bg-white px-2 absolute" style="width: 56px; height: 38px;">
+                    <path d="M8 3.1V7a4 4 0 0 0 8 0V3.1"/>
+                    <path d="m9 15-1-1"/>
+                    <path d="m15 15 1-1"/>
+                    <path d="M9 19c-2.8 0-5-2.2-5-5v-4a8 8 0 0 1 16 0v4c0 2.8-2.2 5-5 5Z"/>
+                    <path d="m8 19-2 3"/>
+                    <path d="m16 19 2 3"/>
+                    <path d="M2 22h20"/>
+                  </svg>
                   <div id="ticketDotRight" class="absolute -right-1.5 w-3.5 h-3.5 rounded-full border-[3px] border-white shadow-sm bg-[#004a99]"></div>
                 </div>
               </div>
 
-              <div class="flex flex-col flex-1 text-right min-w-0 pl-2">
+              <!-- 修改点4: 同样移除右侧的 min-w-0 -->
+              <div class="flex flex-col flex-1 text-right pl-2">
                 <span class="text-xs text-gray-400 uppercase mb-1">终点 Destination</span>
-                <div id="ticketEndStation" class="text-4xl font-black text-gray-800 truncate leading-relaxed pb-1">Do都城</div>
+                <!-- 修改点5: 同样移除 truncate，换成 whitespace-nowrap -->
+                <div id="ticketEndStation" class="text-4xl font-black text-gray-800 leading-relaxed pb-1 whitespace-nowrap">Do都城</div>
               </div>
             </div>
 
