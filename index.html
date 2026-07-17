@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>融融的地铁票生成器</title>
+  <!-- 引入 Tailwind CSS (CDN 方式，方便本地直接打开) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- 引入 Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- 引入 html2canvas 用于下载图片 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <!-- 引入自定义样式 -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="min-h-screen bg-gray-100 flex flex-col md:flex-row print:bg-white">
+  
+  <!-- 左侧控制面板 (打印时隐藏) -->
+  <aside class="w-full md:w-[360px] bg-white border-r border-gray-200 flex flex-col h-screen sticky top-0 overflow-y-auto print:hidden shadow-lg z-10">
+    <div class="p-6 border-b border-gray-200 bg-indigo-50/30">
+      <h1 class="text-2xl font-black text-gray-900 flex items-center gap-3">
+        <i data-lucide="ticket" class="w-7 h-7 text-indigo-600"></i>
+        地铁票生成器
+      </h1>
+      <p class="text-sm text-gray-500 mt-2 font-medium">目前仅支持杭州地铁标识</p>
+    </div>
+
+    <div class="p-6 flex-1 flex flex-col gap-6">
+      <div class="space-y-2">
+        <label class="text-sm font-bold text-gray-700">城市地铁 City</label>
+        <select id="cityId" class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none bg-gray-50 transition">
+          <!-- 选项由 JS 动态生成 -->
+        </select>
+      </div>
+
+      <!-- 自定义城市的额外选项 -->
+      <div id="customCityOptions" class="flex gap-4 hidden">
+        <div class="space-y-2 flex-1">
+          <label class="text-sm font-bold text-gray-700">名称 Name</label>
+          <input type="text" id="customCityName" class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50" placeholder="例如: 某某地铁">
+        </div>
+      </div>
+
+      <!-- 线路和颜色选择器 -->
+      <div class="flex gap-4">
+        <div class="space-y-2 flex-1">
+          <label class="text-sm font-bold text-gray-700">线路 Line</label>
+          <input type="text" id="line" class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50" placeholder="例如: 1号线">
+        </div>
+        <div class="space-y-2 w-24">
+          <label class="text-sm font-bold text-gray-700">颜色 Color</label>
+          <input type="color" id="lineColor" class="w-full h-11 border border-gray-300 rounded-lg p-1 cursor-pointer bg-gray-50">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div class="space-y-2">
+          <label class="text-sm font-bold text-gray-700">起点 Origin</label>
+          <input type="text" id="startStation" class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50">
+        </div>
+        <div class="space-y-2">
+          <label class="text-sm font-bold text-gray-700">终点 Destination</label>
+          <input type="text" id="endStation" class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50">
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-sm font-bold text-gray-700">乘车时间 Date</label>
+        <!-- 改为了 type="date"，只保留年月日 -->
+        <input type="date" id="date" class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50">
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-sm font-bold text-gray-700">票价 Price</label>
+        <input type="text" id="price" class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-gray-50" placeholder="例如: ¥5.00">
+      </div>
+    </div>
+
+    <div class="p-6 border-t border-gray-200 bg-white">
+      <button onclick="downloadTicket()" class="w-full bg-gray-900 text-white py-3.5 rounded-xl flex items-center justify-center gap-2 hover:bg-black transition-all font-bold shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0">
+        <i data-lucide="download" class="w-5 h-5"></i>
+        下载车票
+      </button>
+    </div>
+  </aside>
+
+  <!-- 右侧预览区域 -->
+  <main class="flex-1 flex flex-col min-h-screen print:h-auto print:block relative overflow-x-auto">
+    <div class="flex-1 flex items-center justify-center p-8 print:p-0 min-w-[760px]">
+      <div class="print:block">
+        
+        <!-- 车票 UI 卡片 -->
+        <div id="ticket-container" class="relative w-[720px] h-[360px] bg-white rounded-2xl shadow-xl overflow-hidden flex border border-gray-200 mx-auto print:shadow-none print:border-gray-300">
+          <!-- 左侧边栏装饰色 -->
+          <div id="ticketAccentBorder" class="w-4 h-full bg-[#004a99]"></div>
+
+          <div class="flex-1 p-8 flex flex-col justify-between">
+            <!-- Header -->
+            <div class="flex justify-between items-start">
+              <div class="flex items-center gap-3">
+                <!-- 头像区域 (为了能塞下图片，去掉了内联文字 span，由 JS 控制) -->
+                <div id="ticketLogoBg" class="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm tracking-wider bg-[#004a99] overflow-hidden">
+                </div>
+                <div>
+                  <div class="flex items-center gap-3">
+                    <h1 id="ticketCityName" class="text-3xl font-black tracking-widest text-gray-800 whitespace-nowrap">北京地铁</h1>
+                    <!-- 线路名称修改为更美观的横向标签 -->
+                    <span id="ticketLine" class="text-sm font-bold px-2.5 py-1 rounded-md text-white shadow-sm bg-[#004a99] tracking-wider whitespace-nowrap">1号线</span>
+                  </div>
+                  <p class="text-sm text-gray-500 font-mono mt-1 tracking-wider uppercase">METRO BOARDING PASS</p>
+                </div>
+              </div>
+              <div class="text-right pt-1">
+                <div class="text-sm font-bold text-gray-400 tracking-widest uppercase">单程票 / Single Journey</div>
+              </div>
+            </div>
+
+            <!-- 旅程信息 -->
+            <div class="flex justify-between items-end my-4">
+              <div class="flex flex-col flex-1">
+                <span class="text-xs text-gray-400 uppercase tracking-widest mb-1">起点 Origin</span>
+                <span id="ticketStartStation" class="text-4xl font-black text-gray-800 tracking-tight truncate pr-4">笑笑橙</span>
+              </div>
+
+              <!-- 装饰线路指示器 (调整为更紧凑的间距) -->
+              <div class="flex flex-col items-center justify-center w-36 mx-4 relative pb-3 shrink-0">
+                <div class="w-full border-t-2 border-dashed border-gray-300 relative flex items-center justify-center">
+                  <div id="ticketDotLeft" class="absolute -left-1.5 w-3.5 h-3.5 rounded-full border-[3px] border-white shadow-sm bg-[#004a99]"></div>
+                  <!-- 缩小了图标尺寸和留白，使整体间距变紧凑 -->
+                  <i data-lucide="train-front" class="text-gray-400 bg-white px-2 absolute" style="width: 56px; height: 38px;"></i>
+                  <div id="ticketDotRight" class="absolute -right-1.5 w-3.5 h-3.5 rounded-full border-[3px] border-white shadow-sm bg-[#004a99]"></div>
+                </div>
+              </div>
+
+              <div class="flex flex-col flex-1 text-right">
+                <span class="text-xs text-gray-400 uppercase tracking-widest mb-1">终点 Destination</span>
+                <span id="ticketEndStation" class="text-4xl font-black text-gray-800 tracking-tight truncate pl-4">Do都城</span>
+              </div>
+            </div>
+
+            <!-- 底部 Meta Data -->
+            <div class="flex justify-between items-center bg-gray-50 rounded-xl p-5 border border-gray-100">
+              <div class="flex flex-col gap-1">
+                <span class="text-[11px] text-gray-400 uppercase font-bold tracking-wider">乘车时间 Date</span>
+                <span id="ticketDate" class="font-mono text-gray-700 font-medium text-lg"></span>
+              </div>
+              <div class="flex flex-col gap-1 text-right">
+                <span class="text-[11px] text-gray-400 uppercase font-bold tracking-wider">票价 Price</span>
+                <span id="ticketPrice" class="font-mono text-3xl font-black text-[#004a99]">¥5.00</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 右侧扫码区域 (撕裂效果) -->
+          <div class="w-56 border-l-[3px] border-dashed border-gray-200 bg-gray-50 flex flex-col items-center justify-center relative p-6">
+            <!-- 上下镂空圆 -->
+            <div class="absolute -top-4 -left-4 w-8 h-8 bg-gray-100 rounded-full print:bg-white"></div>
+            <div class="absolute -bottom-4 -left-4 w-8 h-8 bg-gray-100 rounded-full print:bg-white"></div>
+
+            <span class="text-[11px] text-gray-400 tracking-widest text-center mb-6 font-bold uppercase">
+              扫码过闸<br>Scan to Enter
+            </span>
+            <div id="qrcodeContainer"></div>
+            <span id="ticketNo" class="text-[9px] text-gray-400 font-mono mt-6 text-center break-all tracking-wider"></span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    
+    <div class="text-center pb-8 text-gray-400 text-sm print:hidden">
+      预览效果仅供参考，点击“打印车票”后将自动去除所有控制面板，完美适配 A4 纸张。
+    </div>
+  </main>
+  
+  <script src="main.js"></script>
+</body>
+</html>
