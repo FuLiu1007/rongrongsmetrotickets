@@ -117,13 +117,13 @@
 
             <!-- 旅程信息 -->
             <div class="flex justify-between items-end my-4">
-              <div class="flex flex-col flex-1 overflow-hidden">
+              <div class="flex flex-col flex-1 min-w-0 pr-2">
                 <span class="text-xs text-gray-400 uppercase mb-1">起点 Origin</span>
-                <span id="ticketStartStation" class="text-4xl font-black text-gray-800 whitespace-nowrap overflow-hidden pr-4">笑笑橙</span>
+                <div id="ticketStartStation" class="text-4xl font-black text-gray-800 truncate leading-relaxed pb-1">笑笑橙</div>
               </div>
 
               <!-- 装饰线路指示器 (调整为更紧凑的间距) -->
-              <div class="flex flex-col items-center justify-center w-36 mx-4 relative pb-3 shrink-0">
+              <div class="flex flex-col items-center justify-center w-32 mx-2 relative pb-4 shrink-0">
                 <div class="w-full border-t-2 border-dashed border-gray-300 relative flex items-center justify-center">
                   <div id="ticketDotLeft" class="absolute -left-1.5 w-3.5 h-3.5 rounded-full border-[3px] border-white shadow-sm bg-[#004a99]"></div>
                   <!-- 替换为图片编码直接渲染，解决下载时图标丢失的问题 -->
@@ -132,9 +132,9 @@
                 </div>
               </div>
 
-              <div class="flex flex-col flex-1 text-right overflow-hidden">
+              <div class="flex flex-col flex-1 text-right min-w-0 pl-2">
                 <span class="text-xs text-gray-400 uppercase mb-1">终点 Destination</span>
-                <span id="ticketEndStation" class="text-4xl font-black text-gray-800 whitespace-nowrap overflow-hidden pl-4">Do都城</span>
+                <div id="ticketEndStation" class="text-4xl font-black text-gray-800 truncate leading-relaxed pb-1">Do都城</div>
               </div>
             </div>
 
